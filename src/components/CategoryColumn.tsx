@@ -67,7 +67,7 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
 
   return (
     <div 
-      className={`rounded-2xl border-2 transition-all duration-300 ${categoryInfo.color} shadow-lg hover:shadow-xl transform hover:-translate-y-1 relative`}
+      className={`rounded-2xl border-2 transition-all duration-300 ${categoryInfo.color} shadow-lg hover:shadow-xl relative`}
       style={{ zIndex: 30 }}
     >
       {/* カテゴリヘッダー */}
@@ -130,7 +130,7 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
                           zIndex: snapshot.isDragging ? 999999 : 'auto',
                         }}
                         className={`transition-all duration-300 ${
-                          snapshot.isDragging ? 'rotate-1 scale-105 shadow-2xl' : 'hover:scale-[1.01]'
+                          snapshot.isDragging ? 'shadow-2xl' : ''
                         }`}
                       >
                         <TaskItem

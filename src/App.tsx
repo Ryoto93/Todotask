@@ -82,7 +82,7 @@ const TopPage: React.FC<{
         
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">直近3日以内のタスク</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">納期が近いタスク</h2>
             <button 
               onClick={() => window.location.href = '/manage'} 
               className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
@@ -93,13 +93,16 @@ const TopPage: React.FC<{
           
           {recentTasks.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-gray-400 dark:text-gray-500 text-lg mb-2">直近3日以内のタスクはありません</div>
+              <div className="text-gray-400 dark:text-gray-500 text-lg mb-2">納期が近いタスクはありません</div>
               <div className="text-gray-300 dark:text-gray-600 text-sm">新しいタスクを追加してみましょう</div>
             </div>
           ) : (
             <div className="space-y-3">
               {recentTasks.map(task => (
-                <div key={task.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-200">
+                <div 
+                  key={task.id} 
+                  className="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-200"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <span className="font-medium text-gray-900 dark:text-white">{task.text}</span>
@@ -129,6 +132,11 @@ const TopPage: React.FC<{
                       )}
                     </div>
                   </div>
+                  {task.description && (
+                    <div className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                      {task.description}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -150,23 +158,69 @@ const ManagePage: React.FC<{
   onShowSettings: () => void;
   theme: 'light' | 'dark';
 }> = ({ tasks, onToggleTask, onDeleteTask, onUpdateTask, onToggleTheme, onShowCompleted, onShowSettings, theme }) => {
-  // ドラッグ＆ドロップ時のカテゴリ移動処理
+  const [isDragging, setIsDragging] = useState(false);
+
+  // ドラッグ＆ドロップ時のカテゴリ移動処理を改善
+  const handleDragStart = (start: { draggableId: string }) => {
+    setIsDragging(true);
+    const task = tasks.find(t => t.id === start.draggableId);
+    if (task) {
+      // 必要に応じてここでタスクのカテゴリ情報を使用
+    }
+    
+    // ドラッグ開始時にハプティックフィードバック（対応デバイスのみ）
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+  };
+
   const handleDragEnd = (result: DropResult) => {
+    setIsDragging(false);
+    
     const { destination, source, draggableId } = result;
-    if (!destination) return;
+    
+    if (!destination) {
+      // ドロップエリア外でドロップされた場合の視覚的フィードバック
+      if ('vibrate' in navigator) {
+        navigator.vibrate([100, 50, 100]);
+      }
+      return;
+    }
+    
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
       return;
     }
-    // カテゴリ移動
+    
+    // カテゴリ移動成功時のフィードバック
     const newCategory = destination.droppableId as 'work' | 'personal' | 'uncategorized';
+    const oldCategory = source.droppableId;
+    
     onUpdateTask(draggableId, { category: newCategory });
+    
+    // 成功時のハプティックフィードバック
+    if ('vibrate' in navigator) {
+      navigator.vibrate(200);
+    }
+    
+    // 成功通知（オプション）
+    const task = tasks.find(t => t.id === draggableId);
+    if (task) {
+      const categoryNames = {
+        work: '仕事',
+        personal: 'プライベート',
+        uncategorized: '未分類'
+      };
+      
+      // 簡単な成功メッセージを表示（実装に応じて調整）
+      console.log(`"${task.text}" を ${categoryNames[oldCategory as keyof typeof categoryNames]} から ${categoryNames[newCategory]} に移動しました`);
+    }
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div className={`min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 ${isDragging ? 'select-none' : ''}`}>
       <Header
         onToggleTheme={onToggleTheme}
         onShowCompleted={onShowCompleted}
@@ -176,10 +230,27 @@ const ManagePage: React.FC<{
       <div className="max-w-7xl mx-auto px-6 py-8 relative" style={{ zIndex: 10 }}>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">タスク管理</h1>
-          <p className="text-gray-600 dark:text-gray-300">ドラッグ＆ドロップでカテゴリを変更できます</p>
+          <div className="flex items-center gap-4">
+            <p className="text-gray-600 dark:text-gray-300">
+              ドラッグ＆ドロップでカテゴリを変更できます
+            </p>
+            {isDragging && (
+              <div className="flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium animate-pulse">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                <span>ドラッグ中...</span>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 relative" style={{ zIndex: 20 }}>
-          <DragDropContext onDragEnd={handleDragEnd}>
+        
+        {/* ドラッグ中の全体的な視覚的改善 */}
+        <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 relative transition-all duration-300 ${
+          isDragging ? 'shadow-2xl ring-4 ring-blue-500/20' : ''
+        }`} style={{ zIndex: 20 }}>
+          <DragDropContext 
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
             <TaskList
               tasks={tasks}
               onToggleTask={onToggleTask}
@@ -187,7 +258,20 @@ const ManagePage: React.FC<{
               onUpdateTask={onUpdateTask}
             />
           </DragDropContext>
+          
+          {/* ドラッグ中のオーバーレイ */}
+          {isDragging && (
+            <div className="absolute inset-0 pointer-events-none z-30">
+              <div className="absolute top-4 left-4 right-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-2 border-dashed border-blue-300 dark:border-blue-600 rounded-xl p-3">
+                <p className="text-center text-sm font-medium text-blue-700 dark:text-blue-300">
+                  🎯 適切なカテゴリエリアにドロップしてください
+                </p>
+              </div>
+            </div>
+          )}
         </div>
+        
+
       </div>
     </div>
   );

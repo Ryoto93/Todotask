@@ -123,7 +123,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
           ? 'border-blue-500 ring-4 ring-blue-500/20 shadow-lg'
           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
         }
-        hover:shadow-lg hover:-translate-y-0.5
+        hover:shadow-lg
         ${task.completed ? 'opacity-75' : ''}
       `}
       onMouseEnter={() => setIsHovered(true)}
