@@ -15,9 +15,9 @@ export function TaskList({ tasks, onToggleTask, onDeleteTask, onUpdateTask }: Ta
   const uncategorizedTasks = tasks.filter(task => task.category === 'uncategorized' && !task.completed);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Main categories in a grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <CategoryColumn
           category="work"
           tasks={workTasks}
@@ -36,7 +36,7 @@ export function TaskList({ tasks, onToggleTask, onDeleteTask, onUpdateTask }: Ta
 
       {/* Uncategorized tasks at the bottom, only show if there are tasks */}
       {uncategorizedTasks.length > 0 && (
-        <div className="mt-6">
+        <div className="mt-8">
           <CategoryColumn
             category="uncategorized"
             tasks={uncategorizedTasks}

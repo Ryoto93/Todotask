@@ -155,21 +155,22 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
   };
 
   return (
-    <div className="w-full space-y-4">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="w-full space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* カテゴリ選択 */}
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">カテゴリ</label>
+          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">カテゴリ</label>
           <select
             value={category}
             onChange={e => setCategory(e.target.value as 'work' | 'personal' | 'uncategorized')}
-            className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 text-sm bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200"
           >
             <option value="uncategorized">未分類</option>
             <option value="work">仕事</option>
             <option value="personal">プライベート</option>
           </select>
         </div>
+        
         {/* メインタスク入力 */}
         <div className="relative">
           <input
@@ -182,13 +183,13 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
             onBlur={handleBlur}
             placeholder="新しいタスクを追加... (Enter で追加、Tab で詳細入力)"
             className={`
-              w-full px-4 py-3 text-sm bg-white dark:bg-gray-800 border-2 rounded-lg
+              w-full px-6 py-4 text-base bg-white dark:bg-gray-800 border-2 rounded-xl
               placeholder:text-gray-400 dark:placeholder:text-gray-500
               text-gray-900 dark:text-gray-100
-              transition-all duration-200 ease-out
+              transition-all duration-300 ease-out
               ${isFocused
-                ? 'border-blue-500 ring-4 ring-blue-500 ring-opacity-10'
-                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                ? 'border-blue-500 ring-4 ring-blue-500/20 shadow-lg'
+                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
               }
               focus:outline-none
             `}
@@ -198,19 +199,26 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
             <button
               type="button"
               onClick={() => setIsExpanded(true)}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1 text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 rounded-md hover:bg-blue-200 dark:hover:bg-blue-900/40 transition-colors duration-200 md:hidden"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 px-4 py-2 text-sm bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 md:hidden"
             >
               詳細
             </button>
           )}
         </div>
+        
         {/* 追加ボタン（常時表示） */}
         <div className="flex justify-end">
           <button
             type="submit"
             onClick={handleSubmit}
-            className="px-5 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow"
             disabled={!taskText.trim()}
+            className={`
+              px-8 py-3 text-sm font-medium rounded-xl transition-all duration-300 shadow-lg transform hover:-translate-y-0.5
+              ${taskText.trim()
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 hover:shadow-xl'
+                : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+              }
+            `}
           >
             タスク追加
           </button>
@@ -218,9 +226,9 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
 
         {/* 詳細入力エリア - 条件付き表示 */}
         {(isExpanded || taskText.trim()) && (
-          <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-200">
+          <div className="space-y-6 p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-2xl border border-gray-200 dark:border-gray-700 transition-all duration-300 shadow-lg">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 詳細オプション
               </span>
               <button
@@ -230,7 +238,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
                   setDescription('');
                   setDueDate('');
                 }}
-                className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200"
               >
                 閉じる
               </button>
@@ -238,7 +246,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
             
           {/* 詳細説明 */}
           <div>
-            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
               詳細・メモ
             </label>
             <textarea
@@ -247,54 +255,54 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
               onChange={(e) => setDescription(e.target.value)}
               onKeyDown={handleDescriptionKeyDown}
               placeholder="タスクの詳細や補足情報を入力... (Enter で追加、Shift+Enter で改行)"
-              rows={2}
-              className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+              rows={3}
+              className="w-full px-4 py-3 text-sm bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 resize-none transition-all duration-200"
             />
           </div>
 
           {/* 納期設定 */}
           <div>
-            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
               納期
             </label>
             {/* 納期タイプ選択 */}
-            <div className="flex gap-4 mb-2">
-              <label className="flex items-center text-xs">
+            <div className="flex gap-6 mb-4">
+              <label className="flex items-center text-sm cursor-pointer group">
                 <input
                   type="radio"
                   name="dueType"
                   value="single"
                   checked={dueType === 'single'}
                   onChange={() => setDueType('single')}
-                  className="mr-1"
+                  className="mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
-                日付
+                <span className="group-hover:text-blue-600 transition-colors duration-200">日付</span>
               </label>
-              <label className="flex items-center text-xs">
+              <label className="flex items-center text-sm cursor-pointer group">
                 <input
                   type="radio"
                   name="dueType"
                   value="period"
                   checked={dueType === 'period'}
                   onChange={() => setDueType('period')}
-                  className="mr-1"
+                  className="mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
-                期間
+                <span className="group-hover:text-blue-600 transition-colors duration-200">期間</span>
               </label>
             </div>
             {/* クイック選択ボタン */}
             {dueType === 'single' && (
-              <div className="flex gap-2 mb-3">
+              <div className="flex gap-3 mb-4 flex-wrap">
                 {getQuickDateOptions().map((option) => (
                   <button
                     key={option.label}
                     type="button"
                     onClick={() => setDueDate(option.value)}
                     className={`
-                      px-3 py-1 text-xs rounded-full border transition-colors duration-200
+                      px-4 py-2 text-sm rounded-xl border-2 transition-all duration-200 font-medium
                       ${dueDate === option.value
-                        ? 'bg-blue-100 border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-300'
-                        : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600'
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 border-blue-500 text-white shadow-lg'
+                        : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-md'
                       }
                     `}
                   >
@@ -308,7 +316,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
               <div>
                 <div className="relative">
                   <CalendarIcon
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 cursor-pointer"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 cursor-pointer hover:text-blue-500 transition-colors duration-200"
                     onClick={() => dueDateInputRef.current?.focus()}
                   />
                   <input
@@ -317,54 +325,56 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
                     onKeyDown={handleDueInputKeyDown}
-                    className="w-full pl-10 pr-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full pl-12 pr-4 py-3 text-sm bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200"
                   />
                 </div>
                 {/* 日付プレビュー（曜日付き） */}
                 {dueDate && (
-                  <div className="mt-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded text-xs text-gray-700 dark:text-gray-200 flex items-center">
-                    <CalendarIcon className="w-3 h-3 mr-1 text-gray-400 cursor-pointer" onClick={() => dueDateInputRef.current?.focus()} />
+                  <div className="mt-3 px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl text-sm text-gray-700 dark:text-gray-200 flex items-center border border-blue-200 dark:border-blue-700">
+                    <CalendarIcon className="w-4 h-4 mr-2 text-blue-500 cursor-pointer hover:text-blue-600 transition-colors duration-200" onClick={() => dueDateInputRef.current?.focus()} />
                     {dueDate.replace(/-/g, '/')}（{getWeekday(dueDate)}）
                   </div>
                 )}
               </div>
             )}
             {dueType === 'period' && (
-              <div className="flex gap-2">
-                <div className="relative w-1/2">
-                  <CalendarIcon
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 cursor-pointer"
-                    onClick={() => dueStartInputRef.current?.focus()}
-                  />
-                  <input
-                    ref={dueStartInputRef}
-                    type="date"
-                    value={dueStart}
-                    onChange={(e) => setDueStart(e.target.value)}
-                    onKeyDown={handleDueInputKeyDown}
-                    className="w-full pl-10 pr-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="開始日"
-                  />
-                </div>
-                <div className="relative w-1/2">
-                  <CalendarIcon
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 cursor-pointer"
-                    onClick={() => dueEndInputRef.current?.focus()}
-                  />
-                  <input
-                    ref={dueEndInputRef}
-                    type="date"
-                    value={dueEnd}
-                    onChange={(e) => setDueEnd(e.target.value)}
-                    onKeyDown={handleDueInputKeyDown}
-                    className="w-full pl-10 pr-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="終了日"
-                  />
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="relative flex-1">
+                    <CalendarIcon
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 cursor-pointer hover:text-blue-500 transition-colors duration-200"
+                      onClick={() => dueStartInputRef.current?.focus()}
+                    />
+                    <input
+                      ref={dueStartInputRef}
+                      type="date"
+                      value={dueStart}
+                      onChange={(e) => setDueStart(e.target.value)}
+                      onKeyDown={handleDueInputKeyDown}
+                      className="w-full pl-12 pr-4 py-3 text-sm bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200"
+                      placeholder="開始日"
+                    />
+                  </div>
+                  <div className="relative flex-1">
+                    <CalendarIcon
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 cursor-pointer hover:text-blue-500 transition-colors duration-200"
+                      onClick={() => dueEndInputRef.current?.focus()}
+                    />
+                    <input
+                      ref={dueEndInputRef}
+                      type="date"
+                      value={dueEnd}
+                      onChange={(e) => setDueEnd(e.target.value)}
+                      onKeyDown={handleDueInputKeyDown}
+                      className="w-full pl-12 pr-4 py-3 text-sm bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200"
+                      placeholder="終了日"
+                    />
+                  </div>
                 </div>
                 {/* 期間プレビュー（曜日付き） */}
                 {(dueStart || dueEnd) && (
-                  <div className="mt-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded text-xs text-gray-700 dark:text-gray-200 flex items-center w-full">
-                    <CalendarIcon className="w-3 h-3 mr-1 text-gray-400 cursor-pointer" onClick={() => dueStartInputRef.current?.focus()} />
+                  <div className="px-4 py-3 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-xl text-sm text-gray-700 dark:text-gray-200 flex items-center border border-green-200 dark:border-green-700">
+                    <CalendarIcon className="w-4 h-4 mr-2 text-green-500 cursor-pointer hover:text-green-600 transition-colors duration-200" onClick={() => dueStartInputRef.current?.focus()} />
                     {dueStart && `${dueStart.replace(/-/g, '/')}（${getWeekday(dueStart)}）`} 〜 {dueEnd && `${dueEnd.replace(/-/g, '/')}（${getWeekday(dueEnd)}）`}
                   </div>
                 )}
@@ -380,7 +390,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
                   setDueEnd('');
                   setDueType('single');
                 }}
-                className="mt-2 px-3 py-1 text-xs bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500 transition-colors duration-200"
+                className="mt-4 px-4 py-2 text-sm bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500 transition-all duration-200 font-medium"
               >
                 納期をクリア
               </button>
@@ -391,10 +401,10 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
 
         {/* 追加ボタン（モバイル用） */}
         {taskText.trim() && (
-          <div className="flex gap-2 md:hidden">
+          <div className="flex gap-3 md:hidden">
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
             >
               タスクを追加
             </button>
@@ -402,7 +412,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
               <button
                 type="button"
                 onClick={() => setIsExpanded(true)}
-                className="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
+                className="px-6 py-3 bg-gray-200 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-all duration-200"
               >
                 詳細
               </button>
@@ -410,7 +420,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
           </div>
         )}
         {/* ヘルプテキスト */}
-        <div className="mt-2 text-center">
+        <div className="mt-4 text-center">
           <span className="text-xs text-gray-400 dark:text-gray-500">
             <span className="hidden md:inline">Enter でタスクを追加、Tab で詳細入力</span>
             <span className="md:hidden">タップして詳細入力、</span>

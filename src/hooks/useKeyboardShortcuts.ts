@@ -27,14 +27,14 @@ export const useKeyboardShortcuts = (
       switch (key.toLowerCase()) {
         case 'a':
         case 'n':
-          if (!isModifierPressed) {
+          if (isModifierPressed) {
             e.preventDefault();
             shortcuts.onAddTask();
           }
           break;
         case 'd':
         case ' ':
-          if (!isModifierPressed) {
+          if (isModifierPressed) {
             e.preventDefault();
             shortcuts.onToggleCompleted();
           }
