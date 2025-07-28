@@ -51,6 +51,17 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
   const categoryInfo = getCategoryInfo(category);
   const IconComponent = categoryInfo.icon;
 
+  // 納期順でタスクをソート
+  const sortedTasks = [...tasks].sort((a, b) => {
+    // 1. dueDateTime優先、2. duePeriod.start、3. 未設定は最後
+    const getDue = (task: Task) => {
+      if (task.dueDateTime) return new Date(task.dueDateTime).getTime();
+      if (task.duePeriod?.start) return new Date(task.duePeriod.start).getTime();
+      return Infinity;
+    };
+    return getDue(a) - getDue(b);
+  });
+
   return (
     <div className={`rounded-xl border-2 transition-all duration-200 ${categoryInfo.color} shadow-sm hover:shadow-md`}>
       {/* カテゴリヘッダー */}
@@ -80,7 +91,7 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
                 : ''
             }`}
           >
-            {tasks.length === 0 ? (
+            {sortedTasks.length === 0 ? (
               <div className="text-center py-6">
                 <div className={`w-12 h-12 mx-auto mb-2 rounded-full border-2 border-dashed flex items-center justify-center ${categoryInfo.iconColor} border-current opacity-30`}>
                   <IconComponent className="w-5 h-5" />
@@ -91,7 +102,7 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
               </div>
             ) : (
               <div className="space-y-2">
-                {tasks.map((task, index) => (
+                {sortedTasks.map((task, index) => (
                   <Draggable key={task.id} draggableId={task.id} index={index}>
                     {(provided, snapshot) => (
                       <div

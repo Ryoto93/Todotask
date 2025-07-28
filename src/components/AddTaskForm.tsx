@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { CalendarIcon } from './Icons';
 
 interface AddTaskFormProps {
-  onAddTask: (text: string, description?: string, dueDateTime?: Date, duePeriod?: { start: Date; end: Date }) => void;
+  onAddTask: (text: string, category: 'work' | 'personal' | 'uncategorized', description?: string, dueDateTime?: Date, duePeriod?: { start: Date; end: Date }) => void;
   focusInput: boolean;
   onInputFocusChange: (focused: boolean) => void;
 }
@@ -18,6 +18,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
   const [dueStart, setDueStart] = useState('');
   const [dueEnd, setDueEnd] = useState('');
   const [dueType, setDueType] = useState<'single' | 'period'>('single');
+  const [category, setCategory] = useState<'work' | 'personal' | 'uncategorized'>('uncategorized');
   const [isFocused, setIsFocused] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -62,6 +63,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
       }
       onAddTask(
         taskText.trim(),
+        category,
         description.trim() || undefined,
         dueDateTimeObj,
         duePeriodObj
@@ -72,6 +74,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
       setDueStart('');
       setDueEnd('');
       setDueType('single');
+      setCategory('uncategorized');
       setIsExpanded(false);
     }
   };
@@ -154,6 +157,19 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
   return (
     <div className="w-full space-y-4">
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* カテゴリ選択 */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">カテゴリ</label>
+          <select
+            value={category}
+            onChange={e => setCategory(e.target.value as 'work' | 'personal' | 'uncategorized')}
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="uncategorized">未分類</option>
+            <option value="work">仕事</option>
+            <option value="personal">プライベート</option>
+          </select>
+        </div>
         {/* メインタスク入力 */}
         <div className="relative">
           <input
@@ -177,7 +193,6 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
               focus:outline-none
             `}
           />
-          
           {/* 詳細入力展開ボタン（モバイル用） */}
           {taskText.trim() && !isExpanded && (
             <button
@@ -188,6 +203,17 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
               詳細
             </button>
           )}
+        </div>
+        {/* 追加ボタン（常時表示） */}
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="px-5 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow"
+            disabled={!taskText.trim()}
+          >
+            タスク追加
+          </button>
         </div>
 
         {/* 詳細入力エリア - 条件付き表示 */}

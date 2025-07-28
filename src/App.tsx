@@ -64,14 +64,14 @@ function App() {
   }, []);
 
   // Task management functions
-  const addTask = useCallback((text: string, description?: string, dueDateTime?: Date, duePeriod?: { start: Date; end: Date }) => {
+  const addTask = useCallback((text: string, category: 'work' | 'personal' | 'uncategorized', description?: string, dueDateTime?: Date, duePeriod?: { start: Date; end: Date }) => {
     const newTask: Task = {
       id: Date.now().toString(),
       text,
       description,
       completed: false,
       createdAt: new Date(),
-      category: 'uncategorized',
+      category,
       dueDateTime,
       duePeriod,
     };
