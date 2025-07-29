@@ -75,12 +75,12 @@ const TopPage: React.FC<{
           <AddTaskForm onAddTask={onAddTask} focusInput={focusInput} onInputFocusChange={onInputFocusChange} />
         </div>
         
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">納期が近いタスク</h2>
             <button 
-              onClick={() => navigate('/manage')} 
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              onClick={() => navigate('/manage')}
+              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
             >
               全タスクを管理
             </button>
