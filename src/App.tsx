@@ -7,7 +7,7 @@ import { Settings } from './components/Settings';
 import { Header } from './components/Header';
 import { loadTasks, saveTasks, loadSettings, saveSettings } from './utils/storage';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 
 // トップページ: タスク追加＋直近3日タスク
@@ -29,25 +29,18 @@ const TopPage: React.FC<{
   
   const isWithin3Days = (task: Task) => {
     if (task.completed) return false;
-    
-    // 単一日付の場合
+    // 単一日付の場合: その日付が3日以内
     if (task.dueDateTime) {
       const dueDate = new Date(task.dueDateTime);
       dueDate.setHours(0, 0, 0, 0);
       return dueDate >= now && dueDate <= threeDaysLater;
     }
-    
-    // 期間の場合
-    if (task.duePeriod?.start) {
-      const startDate = new Date(task.duePeriod.start);
-      startDate.setHours(0, 0, 0, 0);
+    // 期間の場合: 締め切り日（end）が3日以内
+    if (task.duePeriod?.end) {
       const endDate = new Date(task.duePeriod.end);
-      endDate.setHours(23, 59, 59, 999);
-      
-      // 期間が3日以内と重複するかチェック
-      return startDate <= threeDaysLater && endDate >= now;
+      endDate.setHours(0, 0, 0, 0);
+      return endDate >= now && endDate <= threeDaysLater;
     }
-    
     return false;
   };
   const recentTasks = tasks.filter(isWithin3Days);
@@ -57,6 +50,8 @@ const TopPage: React.FC<{
     const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
     return weekdays[date.getDay()];
   };
+
+  const navigate = useNavigate();
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -84,7 +79,7 @@ const TopPage: React.FC<{
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">納期が近いタスク</h2>
             <button 
-              onClick={() => window.location.href = '/manage'} 
+              onClick={() => navigate('/manage')} 
               className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               全タスクを管理
@@ -452,10 +447,10 @@ function App() {
         } />
         <Route path="/manage" element={
           <ManagePage
-            tasks={tasks}
+              tasks={tasks}
             onToggleTask={toggleTaskComplete}
-            onDeleteTask={deleteTask}
-            onUpdateTask={updateTask}
+              onDeleteTask={deleteTask}
+              onUpdateTask={updateTask}
             onToggleTheme={toggleTheme}
             onShowCompleted={() => setShowCompletedModal(true)}
             onShowSettings={() => setShowSettingsModal(true)}

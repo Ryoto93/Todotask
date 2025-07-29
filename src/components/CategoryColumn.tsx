@@ -68,7 +68,6 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
   return (
     <div 
       className={`rounded-2xl border-2 transition-all duration-300 ${categoryInfo.color} shadow-lg hover:shadow-xl relative`}
-      style={{ zIndex: 30 }}
     >
       {/* カテゴリヘッダー */}
       <div className={`p-6 rounded-t-2xl ${categoryInfo.headerColor} border-b border-opacity-20`}>
@@ -100,10 +99,9 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
             ref={provided.innerRef}
             className={`p-4 min-h-[200px] transition-all duration-300 rounded-b-2xl relative ${
               snapshot.isDraggingOver 
-                ? `bg-gradient-to-br from-blue-100/50 to-purple-100/50 dark:from-blue-900/20 dark:to-purple-900/20 scale-[1.02] shadow-lg border-2 border-blue-300 dark:border-blue-600` 
+                ? `bg-gradient-to-br from-blue-100/50 to-purple-100/50 dark:from-blue-900/20 dark:to-purple-900/20 shadow-lg border-2 border-blue-300 dark:border-blue-600` 
                 : ''
             }`}
-            style={{ zIndex: 40 }}
           >
             {sortedTasks.length === 0 ? (
               <div className="text-center py-12">

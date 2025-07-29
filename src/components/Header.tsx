@@ -30,11 +30,11 @@ export const Header: React.FC<HeaderProps> = ({
             >
               Monotask
             </div>
-            {location.pathname === '/manage' && (
-              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                管理画面
-              </span>
-            )}
+            <span className={`text-sm text-gray-500 dark:text-gray-400 font-medium transition-opacity duration-200 ${
+                location.pathname === '/manage' ? 'opacity-100' : 'opacity-0'
+              }`}>
+              管理画面
+            </span>
           </div>
 
           {/* ナビゲーション */}
@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
                   : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
               }`}
             >
-              タスク追加
+              トップ
             </button>
             <button
               onClick={() => navigate('/manage')}
@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
                   : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
               }`}
             >
-              タスク管理
+              管理画面
             </button>
           </nav>
 

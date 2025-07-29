@@ -62,9 +62,9 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
         duePeriodObj = { start: new Date(`${dueStart}T00:00:00`), end: new Date(`${dueEnd}T00:00:00`) };
       }
       onAddTask(
-        taskText.trim(),
+        taskText.trim(), 
         category,
-        description.trim() || undefined,
+        description.trim() || undefined, 
         dueDateTimeObj,
         duePeriodObj
       );
@@ -293,27 +293,27 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
             {/* クイック選択ボタン */}
             {dueType === 'single' && (
               <div className="flex gap-3 mb-4 flex-wrap">
-                {getQuickDateOptions().map((option) => (
-                  <button
-                    key={option.label}
-                    type="button"
-                    onClick={() => setDueDate(option.value)}
-                    className={`
+              {getQuickDateOptions().map((option) => (
+                <button
+                  key={option.label}
+                  type="button"
+                  onClick={() => setDueDate(option.value)}
+                  className={`
                       px-4 py-2 text-sm rounded-xl border-2 transition-all duration-200 font-medium
-                      ${dueDate === option.value
+                    ${dueDate === option.value
                         ? 'bg-gradient-to-r from-blue-500 to-purple-500 border-blue-500 text-white shadow-lg'
                         : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-md'
-                      }
-                    `}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
+                    }
+                  `}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
             )}
             {/* 日付・時間入力 */}
             {dueType === 'single' && (
-              <div>
+            <div>
                 <div className="relative">
                   <CalendarIcon
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 cursor-pointer hover:text-blue-500 transition-colors duration-200"
@@ -378,7 +378,7 @@ export const AddTaskForm: React.FC<AddTaskFormProps> = ({
                     {dueStart && `${dueStart.replace(/-/g, '/')}（${getWeekday(dueStart)}）`} 〜 {dueEnd && `${dueEnd.replace(/-/g, '/')}（${getWeekday(dueEnd)}）`}
                   </div>
                 )}
-              </div>
+            </div>
             )}
             {/* クリアボタン */}
             {(dueType === 'single' && dueDate) || (dueType === 'period' && (dueStart || dueEnd)) ? (
